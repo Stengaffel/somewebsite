@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Typing Test</title>
+        <meta charset="UTF-8">
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            div {
+                width: 25em;
+                border: 1px solid black;
+                padding-left: 20px;
+            }
+            p {
+                height: 1em;
+            }
+        </style>
+        <script type="text/javascript">
+            var curLine = "";
+            var corrChars = 0;
+            var started = false;
+
+            function swapWord() {
+                var words = ["what", "the", "fuck", "did", "you", "just"];
+                var randIndex = Math.floor( Math.random() * words.length );
+
+                curLine = words[randIndex];
+                document.getElementById("text_field").innerHTML = curLine;
+            }
+
+            function addPoints() {
+                if ( curLine === document.getElementById("typing_field").value.trim() ) {
+                    corrChars = corrChars + curLine.length;
+                }
+            }
+
+            function checkKey() {
+                if ( ! started ) {
+                    return false;
+                }
+                else {
+                    started = true;
+                }
+                document.getElementById("start_info").innerHTML ="";
+                var x = event.keyCode;
+                if ( x === 32 ) {
+                    addPoints();
+                    swapWord();
+                    document.getElementById("typing_field").value = "";
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h2>Typing Test</h2>
+        <p id="start_info">Start typing to start the test</p>
+        <div>
+            <h3 id="text_field">Test</h3>
+        </div>
+        <br>
+        <input id="typing_field" type="text" onkeyup="checkKey()">
+
+        <script type="text/javascript">
+            document.getElementById("typing_field").focus();
+            swapWord();
+        </script>
+    </body>
+</html>
