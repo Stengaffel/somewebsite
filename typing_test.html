@@ -7,19 +7,62 @@
             body {
                 font-family: Arial, Helvetica, sans-serif;
             }
-            div {
+            #text_div {
                 width: 25em;
+                display: inline-block;
                 border: 1px solid black;
                 padding-left: 20px;
             }
+            #word_check {
+                display: inline-block;
+                margin-left: 10px;
+            }
             p {
                 height: 1em;
+            }
+            #end_opts * {
+                margin: 20px 0 0 10px;
+                float: left;
             }
         </style>
         <script type="text/javascript">
             var curLine = "";
             var corrChars = 0;
             var started = false;
+            var interval;
+
+            function restart() {
+                window.clearInterval(interval);
+
+                corrChars = 0;
+                started = false;
+                swapWord();
+
+                var tField = document.getElementById("typing_field");
+                tField.value = "";
+                tField.focus();
+
+                document.getElementById("start_info").innerHTML = "Start typing to start the test";
+                document.getElementById("timer").innerHTML = 60;
+                document.getElementById("wpm_par").innerHTML = "";
+            }
+
+            function endScreen() {
+                var wpm = corrChars / 5;
+
+                var wpmPar = document.getElementById("wpm_par");
+                wpmPar.innerHTML = wpm + " WPM";
+            }
+
+            function countdown() {
+                var curSec = document.getElementById("timer");
+                if ( curSec.innerHTML == 0 ) {
+                    window.clearInterval(interval);
+                    endScreen();
+                    return false;
+                }
+                curSec.innerHTML = curSec.innerHTML - 1;
+            }
 
             function swapWord() {
                 var words = ["what", "the", "fuck", "did", "you", "just"];
@@ -30,16 +73,19 @@
             }
 
             function addPoints() {
+                var wordCheck = document.getElementById("word_check");
                 if ( curLine === document.getElementById("typing_field").value.trim() ) {
+                    wordCheck.innerHTML = "Correct";
                     corrChars = corrChars + curLine.length;
+                }
+                else {
+                    wordCheck.innerHTML = "Incorrect";
                 }
             }
 
             function checkKey() {
                 if ( ! started ) {
-                    return false;
-                }
-                else {
+                    interval = setInterval(countdown,1000);
                     started = true;
                 }
                 document.getElementById("start_info").innerHTML ="";
@@ -55,11 +101,19 @@
     <body>
         <h2>Typing Test</h2>
         <p id="start_info">Start typing to start the test</p>
-        <div>
-            <h3 id="text_field">Test</h3>
+        <p id="timer">60</p>
+        <div id="outer_text_div">
+            <div id="text_div">
+                <h3 id="text_field"></h3>
+            </div>
+            <h3 id="word_check"></h3>
         </div>
         <br>
         <input id="typing_field" type="text" onkeyup="checkKey()">
+        <div id="end_opts">
+            <button id="res_btn" onclick="restart()">Restart</button>
+            <p id="wpm_par"></p>
+        </div>
 
         <script type="text/javascript">
             document.getElementById("typing_field").focus();
