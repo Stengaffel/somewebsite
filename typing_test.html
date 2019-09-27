@@ -64,6 +64,8 @@
                 curSec.innerHTML = curSec.innerHTML - 1;
             }
 
+            function swapLine() {}
+
             function swapWord() {
                 var words = ["what", "the", "fuck", "did", "you", "just"];
                 var randIndex = Math.floor( Math.random() * words.length );
@@ -88,7 +90,9 @@
                     interval = setInterval(countdown,1000);
                     started = true;
                 }
+
                 document.getElementById("start_info").innerHTML ="";
+
                 var x = event.keyCode;
                 if ( x === 32 ) {
                     addPoints();
